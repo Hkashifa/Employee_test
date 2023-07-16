@@ -52,7 +52,7 @@ public class EmployeeController {
     }
 
 
-    @PutMapping("employeeupdate/{id}")
+    @PutMapping("employee-update/{id}")
     public ResponseEntity<EmployeeDTO> updateEmployees(@PathVariable Long id, @RequestBody EmployeeDTO employeeDTO) {
 
         EmployeeDTO newEmployee = service.updateEmployees(id,employeeDTO);
@@ -63,16 +63,18 @@ public class EmployeeController {
     @DeleteMapping("employeedelete/{id}")
     public ResponseEntity<ApiResponse> deleteEmployees(@PathVariable(name = "id") Long id) {
         service.deleteEmployees(id);
-        ApiResponse apiResponse = new ApiResponse(Boolean.TRUE, "Post deleted successfully", HttpStatus.OK);
-        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
+        return  ResponseEntity.ok().build();
     }
 
-    @GetMapping("employeemail")
-    public ResponseEntity<EmployeeDTO>  getEmployeeByEmail(
-            @RequestParam(name = "email") String email)
+    @GetMapping("employeeat")
+    public ResponseEntity<EmployeeDTO>  getEmployeeByAttribute(
+            @RequestParam(name = "email", required = false) String email,
+             @RequestParam(name = "contactNumber", required = false) String number,
+             @RequestParam(name = "firstName", required = false) String firstName
+    )
     {
         logger.debug("This is the email:."+email);
-        EmployeeDTO employeeResponse = service.getEmployeeByEmail(email);
+        EmployeeDTO employeeResponse = service.getEmployeeByAttribute(email,number,firstName);
         return ResponseEntity.ok().body(employeeResponse);
     }
 }

@@ -1,17 +1,16 @@
 package com.example.Employee.service.impl;
 
 import com.example.Employee.dto.EmployeeDTO;
-import com.example.Employee.entity.employeeEntity;
+import com.example.Employee.entity.EmployeeEntity;
 import com.example.Employee.repo.employeeRepo;
 import com.example.Employee.service.EmployeeService;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.jpa.domain.Specification;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 @Service
@@ -28,7 +27,7 @@ public class employeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<employeeEntity> getAllEmployees() {
+    public List<EmployeeEntity> getAllEmployees() {
 
         return employeeRepository.findAll();
     }
@@ -36,10 +35,10 @@ public class employeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDTO createEmployees(EmployeeDTO employeeDTO) {
 
-        employeeEntity employeeConverted = modelMapper.map(employeeDTO,  employeeEntity.class);
-       employeeRepository.save(employeeConverted);
+        EmployeeEntity employeeConverted = modelMapper.map(employeeDTO, EmployeeEntity.class);
+        employeeRepository.save(employeeConverted);
 
-        EmployeeDTO employeeResponse = modelMapper.map(employeeConverted,   EmployeeDTO.class);
+        EmployeeDTO employeeResponse = modelMapper.map(employeeConverted, EmployeeDTO.class);
         return employeeResponse;
 
     }
@@ -47,10 +46,10 @@ public class employeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDTO updateEmployees(Long id, EmployeeDTO employeeDTO) {
 
-        Optional<employeeEntity> updated_employee = employeeRepository.findById(id);
+        Optional<EmployeeEntity> updated_employee = employeeRepository.findById(id);
 
-        if ( updated_employee.isPresent()) {
-            employeeEntity EmployeeEntity =  updated_employee.get();
+        if (updated_employee.isPresent()) {
+            EmployeeEntity EmployeeEntity = updated_employee.get();
 
             EmployeeEntity.setFirstName(employeeDTO.getFirstName());
             EmployeeEntity.setLastName(employeeDTO.getLastName());
@@ -62,17 +61,16 @@ public class employeeServiceImpl implements EmployeeService {
 
             employeeRepository.save(EmployeeEntity);//
             // entity to DTO
-            EmployeeDTO employeeResponse = modelMapper.map(EmployeeEntity,EmployeeDTO.class);
+            EmployeeDTO employeeResponse = modelMapper.map(EmployeeEntity, EmployeeDTO.class);
             return employeeResponse;
         }
         return null;
     }
 
     @Override
-    public void deleteEmployees(long id)
-    {
-        Optional<employeeEntity> optionalEmployee = employeeRepository.findById(id);
-        employeeEntity employee = optionalEmployee
+    public void deleteEmployees(long id) {
+        Optional<EmployeeEntity> optionalEmployee = employeeRepository.findById(id);
+        EmployeeEntity employee = optionalEmployee
                 .orElseThrow(() -> new ResourceNotFoundException("Patient", "id", id));
 
         employeeRepository.delete(employee);
@@ -81,21 +79,21 @@ public class employeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDTO getEmployeesById(long id) {
 
-        Optional<employeeEntity> optionalEmployee = employeeRepository.findById(id);
-        employeeEntity employee = optionalEmployee
+        Optional<EmployeeEntity> optionalEmployee = employeeRepository.findById(id);
+        EmployeeEntity employee = optionalEmployee
                 .orElseThrow(() -> new ResourceNotFoundException("Patient", "id", id));
         return modelMapper.map(employee, EmployeeDTO.class);
     }
 
     @Override
-    public EmployeeDTO getEmployeeByEmail(String email) {
+    public EmployeeDTO getEmployeeByAttribute(String email,String number,String firstName) {
 
-        logger.info("This is the email:."+email);
-        employeeEntity employee =  employeeRepository.findByEmailContaining(email);
+        logger.info("This is the email:." + email);
+        EmployeeEntity employee = employeeRepository.findByEmailOrContactNumberOrFirstName(email,number,firstName);
         //System.out.println(email);
-        return modelMapper.map(employee,EmployeeDTO.class);
+        return modelMapper.map(employee, EmployeeDTO.class);
 
     }
-    }
+}
 
 
