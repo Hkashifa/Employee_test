@@ -69,8 +69,8 @@ public class EmployeeController {
     @GetMapping("employeeat")
     public ResponseEntity<EmployeeDTO>  getEmployeeByAttribute(
             @RequestParam(name = "email", required = false) String email,
-             @RequestParam(name = "contactNumber", required = false) String number,
-             @RequestParam(name = "firstName", required = false) String firstName
+            @RequestParam(name = "contactNumber", required = false) String number,
+            @RequestParam(name = "firstName", required = false) String firstName
     )
     {
         logger.debug("This is the email:."+email);
