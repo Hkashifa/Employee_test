@@ -19,5 +19,5 @@ public interface EmployeeService {
 
     EmployeeDTO getEmployeesById(long id);
 
-    public List<employeeEntity> getEmployeeByEmailandNumber(String email, String number);
+    public EmployeeDTO getEmployeeByEmail(String email);
 }

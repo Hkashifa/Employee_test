@@ -10,10 +10,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @Service
 public class employeeServiceImpl implements EmployeeService {
+
+    private static final Logger logger = LoggerFactory.getLogger(employeeServiceImpl.class);
 
     private final ModelMapper modelMapper;
     private final employeeRepo employeeRepository;
@@ -83,21 +87,13 @@ public class employeeServiceImpl implements EmployeeService {
         return modelMapper.map(employee, EmployeeDTO.class);
     }
 
-    public List<employeeEntity> getEmployeeByEmailandNumber(String email, String number) {
+    @Override
+    public EmployeeDTO getEmployeeByEmail(String email) {
 
-        Specification<employeeEntity> spec = Specification.where(null);
-
-        if (email != null && !email.isEmpty()) {
-            spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.like(root.get("email"), "%" + email + "%"));
-        }
-
-        if (number != null && !number.isEmpty()) {
-            spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("number"), number));
-        }
-
-        return employeeRepository.findAll(spec);
+        logger.info("This is the email:."+email);
+        employeeEntity employee =  employeeRepository.findByEmailContaining(email);
+        //System.out.println(email);
+        return modelMapper.map(employee,EmployeeDTO.class);
 
     }
     }

@@ -9,11 +9,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @RestController
 public class EmployeeController {
     private final ModelMapper modelMapper;
     private final employeeServiceImpl service;
+
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
+
 
     public EmployeeController(ModelMapper modelMapper, employeeServiceImpl service) {
         this.modelMapper = modelMapper;
@@ -61,14 +67,12 @@ public class EmployeeController {
         return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
     }
 
-    @GetMapping("employee/email/number")
-    public List<EmployeeDTO> searchbyEmailandNumber(
-            @RequestParam(name = "email") String email,
-            @RequestParam(name = "number") String number)
+    @GetMapping("employeemail")
+    public ResponseEntity<EmployeeDTO>  getEmployeeByEmail(
+            @RequestParam(name = "email") String email)
     {
-
-        return service.getEmployeeByEmailandNumber(email,number).stream().map(employee -> modelMapper.map(employee, EmployeeDTO.class))
-                .collect(Collectors.toList());
-
+        logger.debug("This is the email:."+email);
+        EmployeeDTO employeeResponse = service.getEmployeeByEmail(email);
+        return ResponseEntity.ok().body(employeeResponse);
     }
 }
