@@ -2,7 +2,7 @@ package com.example.Employee.service.impl;
 
 import com.example.Employee.dto.EmployeeDTO;
 import com.example.Employee.entity.EmployeeEntity;
-import com.example.Employee.repo.employeeRepo;
+import com.example.Employee.repo.EmployeeRepo;
 import com.example.Employee.service.EmployeeService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -11,17 +11,18 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
-public class employeeServiceImpl implements EmployeeService {
+public class EmployeeServiceImpl implements EmployeeService {
 
-    private static final Logger logger = LoggerFactory.getLogger(employeeServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
     private final ModelMapper modelMapper;
-    private final employeeRepo employeeRepository;
+    private final EmployeeRepo employeeRepository;
 
-    public employeeServiceImpl(ModelMapper modelMapper, employeeRepo employeeRepository) {
+    public EmployeeServiceImpl(ModelMapper modelMapper, EmployeeRepo employeeRepository) {
         this.modelMapper = modelMapper;
         this.employeeRepository = employeeRepository;
     }
@@ -86,13 +87,43 @@ public class employeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeDTO getEmployeeByAttribute(String email,String number,String firstName) {
-
-        logger.info("This is the email:." + email);
-        EmployeeEntity employee = employeeRepository.findByEmailOrContactNumberOrFirstName(email,number,firstName);
+    public List<EmployeeDTO> getEmployeeByAttribute(String email,String number,String gender) {
+        //List<EmployeeEntity> employee = employeeRepository.findByEmailOrContactNumberOrFirstName(email,number,firstName);
         //System.out.println(email);
-        return modelMapper.map(employee, EmployeeDTO.class);
-
+        if(email == null && number == null)
+        {
+            return employeeRepository.findByGenderEquals(gender).stream().map(employee -> modelMapper.map(employee, EmployeeDTO.class))
+                    .collect(Collectors.toList());
+        }
+        else if(gender == null && number == null)
+        {
+            return employeeRepository.findByEmailEquals(email).stream().map(employee -> modelMapper.map(employee, EmployeeDTO.class))
+                    .collect(Collectors.toList());
+        }
+        else if(gender == null && email == null)
+        {
+            return employeeRepository.findByContactNumberEquals(number).stream().map(employee -> modelMapper.map(employee, EmployeeDTO.class))
+                    .collect(Collectors.toList());
+        }
+        else if(email == null )
+        {
+            return employeeRepository.findByGenderEqualsAndContactNumberEquals(gender,number).stream().map(employee -> modelMapper.map(employee, EmployeeDTO.class))
+                    .collect(Collectors.toList());
+        }
+        else if(gender == null )
+        {
+            return employeeRepository.findByEmailEqualsAndContactNumberEquals(email,number).stream().map(employee -> modelMapper.map(employee, EmployeeDTO.class))
+                    .collect(Collectors.toList());
+        }
+        else if(number == null )
+        {
+            return employeeRepository.findByEmailEqualsAndGenderEquals(email,gender).stream().map(employee -> modelMapper.map(employee, EmployeeDTO.class))
+                .collect(Collectors.toList());
+        }
+        else {
+            return employeeRepository.findByEmailEqualsAndContactNumberEqualsAndGenderEquals(email, number, gender).stream().map(employee -> modelMapper.map(employee, EmployeeDTO.class))
+                    .collect(Collectors.toList());
+        }
     }
 }
 

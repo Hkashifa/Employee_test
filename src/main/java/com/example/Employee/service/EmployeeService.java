@@ -13,5 +13,5 @@ public interface EmployeeService {
     EmployeeDTO updateEmployees(Long id, EmployeeDTO employeeDTO);
     void deleteEmployees(long id);
     EmployeeDTO getEmployeesById(long id);
-    EmployeeDTO getEmployeeByAttribute(String email,String number,String firstName) ;
+    public List<EmployeeDTO> getEmployeeByAttribute(String email,String number,String gender) ;
 }

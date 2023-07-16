@@ -1,7 +1,7 @@
 package com.example.Employee.controller;
 
 import com.example.Employee.dto.EmployeeDTO;
-import com.example.Employee.service.impl.employeeServiceImpl;
+import com.example.Employee.service.impl.EmployeeServiceImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +16,12 @@ import org.slf4j.LoggerFactory;
 @RestController
 public class EmployeeController {
     private final ModelMapper modelMapper;
-    private final employeeServiceImpl service;
+    private final EmployeeServiceImpl service;
 
     private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
 
-    public EmployeeController(ModelMapper modelMapper, employeeServiceImpl service) {
+    public EmployeeController(ModelMapper modelMapper, EmployeeServiceImpl service) {
         this.modelMapper = modelMapper;
         this.service = service;
     }
@@ -67,14 +67,16 @@ public class EmployeeController {
     }
 
     @GetMapping("employeeat")
-    public ResponseEntity<EmployeeDTO>  getEmployeeByAttribute(
+    public List<EmployeeDTO>  getEmployeeByAttribute(
             @RequestParam(name = "email", required = false) String email,
             @RequestParam(name = "contactNumber", required = false) String number,
-            @RequestParam(name = "firstName", required = false) String firstName
+            @RequestParam(name = "gender", required = false) String gender
     )
     {
-        logger.debug("This is the email:."+email);
-        EmployeeDTO employeeResponse = service.getEmployeeByAttribute(email,number,firstName);
-        return ResponseEntity.ok().body(employeeResponse);
+
+
+        return service.getEmployeeByAttribute(email,number,gender);
+
+
     }
 }

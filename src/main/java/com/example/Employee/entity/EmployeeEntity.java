@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "employee")
-public class EmployeeEntity extends baseEntity{
+public class EmployeeEntity extends BaseEntity {
 
     @Column(name = "firstName")
     private String firstName;
