@@ -17,8 +17,6 @@ import java.util.stream.Collectors;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private static final Logger logger = LoggerFactory.getLogger(EmployeeServiceImpl.class);
-
     private final ModelMapper modelMapper;
     private final EmployeeRepo employeeRepository;
 
@@ -28,9 +26,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<EmployeeEntity> getAllEmployees() {
+    public List<EmployeeDTO> getAllEmployees() {
 
-        return employeeRepository.findAll();
+        return employeeRepository.findAll().stream().map(employee -> modelMapper.map(employee, EmployeeDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Override

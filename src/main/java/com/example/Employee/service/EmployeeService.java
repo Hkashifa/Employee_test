@@ -7,11 +7,10 @@ import java.util.List;
 
 public interface EmployeeService {
 
-    List<EmployeeEntity> getAllEmployees();
-
+   List<EmployeeDTO> getAllEmployees();
     EmployeeDTO createEmployees(EmployeeDTO employeeDTO);
     EmployeeDTO updateEmployees(Long id, EmployeeDTO employeeDTO);
     void deleteEmployees(long id);
     EmployeeDTO getEmployeesById(long id);
-    public List<EmployeeDTO> getEmployeeByAttribute(String email,String number,String gender) ;
+    List<EmployeeDTO> getEmployeeByAttribute(String email,String number,String gender) ;
 }
