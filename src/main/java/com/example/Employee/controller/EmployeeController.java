@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 
 @RestController
+@RequestMapping("/employees")
 public class EmployeeController {
     private final EmployeeService employeeService;
 
@@ -20,21 +21,21 @@ public class EmployeeController {
 
 
     //this works
-    @GetMapping("/employees")
+    @GetMapping
     public List<EmployeeDTO> getAllEmployees() {
 
 
         return employeeService.getAllEmployees();
     }
 
-    @GetMapping("employee/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<EmployeeDTO> getEmployeesById(@PathVariable(name = "id") Long id) {
         //this works i tested it
         EmployeeDTO employeeResponse = employeeService.getEmployeesById(id);
         return ResponseEntity.ok().body(employeeResponse);
     }
 
-    @PostMapping("/employees/new")
+    @PostMapping
     public ResponseEntity<EmployeeDTO> createEmployees(@RequestBody EmployeeDTO employeeDTO) {
 
         EmployeeDTO newEmployee = employeeService.createEmployees(employeeDTO);
@@ -43,7 +44,7 @@ public class EmployeeController {
     }
 
 
-    @PutMapping("employee-update/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<EmployeeDTO> updateEmployees(@PathVariable Long id, @RequestBody EmployeeDTO employeeDTO) {
 
         EmployeeDTO newEmployee = employeeService.updateEmployees(id,employeeDTO);
@@ -51,13 +52,13 @@ public class EmployeeController {
         return ResponseEntity.ok().body(newEmployee);
     }
 
-    @DeleteMapping("employeedelete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse> deleteEmployees(@PathVariable(name = "id") Long id) {
         employeeService.deleteEmployees(id);
         return  ResponseEntity.ok().build();
     }
 
-    @GetMapping("employeeat")
+    @GetMapping
     public List<EmployeeDTO>  getEmployeeByAttribute(
             @RequestParam(name = "email", required = false) String email,
             @RequestParam(name = "contactNumber", required = false) String number,
